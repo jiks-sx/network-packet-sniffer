@@ -15,31 +15,24 @@ def process_packet(packet):
         src_port = None
         dst_port = None
 
-        # TCP Ports
         if packet.haslayer(TCP):
             src_port = packet[TCP].sport
             dst_port = packet[TCP].dport
 
-        # Hostname lookup
         hostname = get_hostname(src_ip)
 
-        # Reverse DNS lookup
         dns_lookup = get_dns(src_ip)
-
-        # DNS query (example: google.com)
+        
         dns_query = "None"
         if packet.haslayer(DNSQR):
             dns_query = packet[DNSQR].qname.decode()
 
-        # Service detection
         service = None
         if dst_port:
             service = get_service(dst_port)
 
-        # Attack detection
         alert = detect_attack(src_ip, dst_port)
 
-        # Log packet to database
         log_packet(src_ip, dst_ip, src_port, dst_port, alert)
 
         print("\n==============================")
